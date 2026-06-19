@@ -102,7 +102,9 @@ ul { list-style: none; }
 
 /* PRODUCT CARD */
 .product-card { display: flex; flex-direction: column; cursor: pointer; }
-.product-card__img { position: relative; aspect-ratio: 3/4; overflow: hidden; border-radius: 2px; display: flex; align-items: center; justify-content: center; }
+.product-card__img { position: relative; aspect-ratio: 3/4; overflow: hidden; border-radius: 2px; display: flex; align-items: center; justify-content: center; background: #1a1a1a; }
+.product-card__img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+.product-card__img:hover img { transform: scale(1.07); }
 .product-card__img:hover .product-card__overlay { opacity: 1; }
 .product-card__img:hover .product-card__visual { transform: scale(1.05); }
 .product-card__overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.4); display: flex; align-items: flex-end; justify-content: center; padding-bottom: 24px; opacity: 0; transition: opacity 0.3s ease; }
@@ -159,6 +161,11 @@ ul { list-style: none; }
 /* COLLECTION GRID */
 .collection-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
 .collection-card { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding: 40px 24px 24px; min-height: 260px; border-radius: 2px; transition: transform 0.3s ease; overflow: hidden; position: relative; }
+.collection-card--photo { padding: 0 24px 24px; }
+.collection-card--photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+.collection-card--photo:hover img { transform: scale(1.07); }
+.collection-card__overlay-dark { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.1) 60%); }
+.collection-card--photo .collection-card__info { position: relative; z-index: 1; padding-bottom: 24px; }
 .collection-card:hover { transform: translateY(-4px); }
 .collection-card__art { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -60%); }
 .collection-icon { font-size: 64px; opacity: 0.5; }
