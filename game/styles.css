@@ -1,0 +1,22 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #05050a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  font-family: monospace;
+}
+
+#gameCanvas {
+  display: block;
+  /* Width/height set by JS to maintain 16:9 at any window size */
+  image-rendering: pixelated;
+}
