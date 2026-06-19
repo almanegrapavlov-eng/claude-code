@@ -1,20 +1,56 @@
-// Manages all active weapons and fires them automatically each frame.
-// Weapons are plain config objects registered with addWeapon().
+import { Projectile } from '../entities/Projectile.js';
+
+const PROJECTILE_SPEED = 520; // world pixels per second
+
+// Fires one projectile at the nearest enemy every `fireRate` seconds.
+// If no enemies exist, the timer still counts down so the shot fires
+// immediately when the first enemy appears.
 export class WeaponSystem {
 
   constructor() {
-    this.weapons     = []; // active weapon configs
-    this.projectiles = []; // live Projectile instances (shared ref from Game)
+    this.fireRate = 0.6;  // seconds between shots
+    this.damage   = 15;
+    this._timer   = 0;
   }
 
-  // Register a weapon config. Config shape defined per-weapon in next step.
-  addWeapon(config) {
-    this.weapons.push({ ...config, _timer: 0 });
+  update(dt, player, enemies, projectiles) {
+    this._timer -= dt;
+    if (this._timer > 0) return;
+
+    const target = this._nearestEnemy(player, enemies);
+    if (!target) return; // wait — don't reset the timer so it fires immediately on spawn
+
+    this._timer = this.fireRate;
+
+    const dx   = target.x - player.x;
+    const dy   = target.y - player.y;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    if (dist === 0) return;
+
+    projectiles.push(new Projectile(
+      player.x, player.y,
+      (dx / dist) * PROJECTILE_SPEED,
+      (dy / dist) * PROJECTILE_SPEED,
+      { damage: this.damage },
+    ));
   }
 
-  // Placeholder — weapon fire logic implemented in next step.
-  update(dt, player, enemies) {
-    // TODO: tick weapon timers, spawn projectiles
+  _nearestEnemy(player, enemies) {
+    let nearest  = null;
+    let bestDist = Infinity;
+
+    for (const e of enemies) {
+      if (!e.active) continue;
+      const dx = e.x - player.x;
+      const dy = e.y - player.y;
+      const d  = dx * dx + dy * dy; // squared — no sqrt needed for comparison
+      if (d < bestDist) {
+        bestDist = d;
+        nearest  = e;
+      }
+    }
+
+    return nearest;
   }
 
 }

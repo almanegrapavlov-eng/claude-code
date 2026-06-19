@@ -123,6 +123,99 @@ export const ProceduralSprites = {
     ctx.restore();
   },
 
+  // ---------- Slime ----------
+  // Green wobbly blob with two beady eyes. Fits in 182x182, centered at (0,0).
+  drawSlime(ctx) {
+    // Shadow
+    this.drawShadow(ctx, 30);
+
+    // Body — slightly squashed ellipse
+    ctx.beginPath();
+    ctx.ellipse(0, 4, 30, 24, 0, 0, Math.PI * 2);
+    ctx.fillStyle = '#52b788';
+    ctx.fill();
+    ctx.strokeStyle = '#1b4332';
+    ctx.lineWidth = 3;
+    ctx.stroke();
+
+    // Shine
+    ctx.beginPath();
+    ctx.ellipse(-8, -6, 9, 6, -0.4, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(255,255,255,0.28)';
+    ctx.fill();
+
+    // Underbelly gradient stripe
+    ctx.beginPath();
+    ctx.ellipse(0, 10, 18, 8, 0, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(180,255,200,0.18)';
+    ctx.fill();
+
+    // Eyes
+    for (const [ex, ey] of [[-11, -4], [11, -4]]) {
+      ctx.beginPath();
+      ctx.arc(ex, ey, 5.5, 0, Math.PI * 2);
+      ctx.fillStyle = '#fff';
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.arc(ex + 1, ey + 1, 2.8, 0, Math.PI * 2);
+      ctx.fillStyle = '#1b4332';
+      ctx.fill();
+    }
+  },
+
+  // ---------- Bat ----------
+  // Purple winged creature. Wings flap using `time` (seconds). Fits in 182x182.
+  drawBat(ctx, facingAngle, time = 0) {
+    ctx.save();
+    ctx.rotate(facingAngle - Math.PI / 2); // top of bat faces its travel direction
+
+    // Shadow
+    this.drawShadow(ctx, 26);
+
+    const flap = Math.sin(time * 12) * 14; // wing flap amplitude in px
+
+    // Left wing
+    ctx.beginPath();
+    ctx.moveTo(0, 4);
+    ctx.bezierCurveTo(-14, -4 + flap, -36, 2 + flap, -34, 20 + flap * 0.4);
+    ctx.bezierCurveTo(-22, 16, -10, 10, 0, 14);
+    ctx.fillStyle = '#7b2d8b';
+    ctx.fill();
+
+    // Right wing
+    ctx.beginPath();
+    ctx.moveTo(0, 4);
+    ctx.bezierCurveTo(14, -4 + flap, 36, 2 + flap, 34, 20 + flap * 0.4);
+    ctx.bezierCurveTo(22, 16, 10, 10, 0, 14);
+    ctx.fillStyle = '#7b2d8b';
+    ctx.fill();
+
+    // Body
+    ctx.beginPath();
+    ctx.ellipse(0, 4, 11, 15, 0, 0, Math.PI * 2);
+    ctx.fillStyle = '#9d4edd';
+    ctx.fill();
+    ctx.strokeStyle = '#3c1361';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Eyes
+    for (const ex of [-5, 5]) {
+      ctx.beginPath();
+      ctx.arc(ex, -2, 3.5, 0, Math.PI * 2);
+      ctx.fillStyle = '#ff6b6b';
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.arc(ex, -2, 1.5, 0, Math.PI * 2);
+      ctx.fillStyle = '#fff';
+      ctx.fill();
+    }
+
+    ctx.restore();
+  },
+
   // ---------- Shadow ----------
   // A soft ellipse drawn under any entity to ground it visually.
   drawShadow(ctx, radiusX, radiusY = radiusX * 0.35) {

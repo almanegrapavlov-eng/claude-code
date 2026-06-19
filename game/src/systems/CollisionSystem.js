@@ -1,33 +1,35 @@
-// Simple circle-vs-circle collision detection.
-// All collision shapes are circles defined by entity.collisionRadius.
+// Circle-vs-circle collision for all entity pairs.
 export class CollisionSystem {
 
-  // Returns true if two circular entities overlap.
-  overlaps(a, b) {
-    const dx   = b.x - a.x;
-    const dy   = b.y - a.y;
-    const dist = Math.sqrt(dx * dx + dy * dy);
-    return dist < a.collisionRadius + b.collisionRadius;
+  resolve(player, enemies, projectiles, gems) {
+    // 1. Projectile hits enemy — projectile is consumed on first hit.
+    for (const proj of projectiles) {
+      if (!proj.active) continue;
+      for (const enemy of enemies) {
+        if (!enemy.active) continue;
+        if (this._overlaps(proj, enemy)) {
+          enemy.takeDamage(proj.damage);
+          proj.active = false;
+          break; // one projectile, one enemy
+        }
+      }
+    }
+
+    // 2. Enemy touches player — player takes damage (i-frames prevent spam).
+    for (const enemy of enemies) {
+      if (!enemy.active) continue;
+      if (this._overlaps(enemy, player)) {
+        player.takeDamage(enemy.damage);
+      }
+    }
   }
 
-  // Returns the squared distance between two entities (cheaper than sqrt).
-  distSq(a, b) {
+  // Returns true when two circular entities overlap.
+  _overlaps(a, b) {
     const dx = b.x - a.x;
     const dy = b.y - a.y;
-    return dx * dx + dy * dy;
-  }
-
-  // Returns true if point (px, py) is inside entity e's circle.
-  pointInCircle(px, py, e) {
-    const dx = px - e.x;
-    const dy = py - e.y;
-    return dx * dx + dy * dy < e.collisionRadius * e.collisionRadius;
-  }
-
-  // Placeholder — full resolution (enemy vs player, projectile vs enemy)
-  // will be wired up in the next step.
-  resolve(player, enemies, projectiles, gems) {
-    // TODO
+    const r  = a.collisionRadius + b.collisionRadius;
+    return dx * dx + dy * dy < r * r;
   }
 
 }

@@ -1,43 +1,91 @@
-// Base enemy entity. Specific variants (Shambler, Dasher, Brute…)
-// will extend or configure this class in a later step.
+import { ProceduralSprites } from '../assets/ProceduralSprites.js';
+
+// Stat definitions for each enemy type.
+const TYPES = {
+  slime: {
+    hp: 60,
+    speed: 70,
+    damage: 8,
+    collisionRadius: 22,
+    xpValue: 2,
+  },
+  bat: {
+    hp: 25,
+    speed: 155,
+    damage: 5,
+    collisionRadius: 16,
+    xpValue: 1,
+  },
+};
+
 export class Enemy {
 
-  constructor(x, y, config = {}) {
-    this.x = x;
-    this.y = y;
+  constructor(x, y, type = 'slime') {
+    const cfg = TYPES[type] ?? TYPES.slime;
 
-    this.hp        = config.hp        ?? 40;
-    this.maxHp     = this.hp;
-    this.speed     = config.speed     ?? 80;
-    this.damage    = config.damage    ?? 8;
-    this.xpValue   = config.xpValue   ?? 1;
-    this.color     = config.color     ?? '#e63946';
+    this.x    = x;
+    this.y    = y;
+    this.type = type;
 
-    this.collisionRadius = config.collisionRadius ?? 20;
+    this.hp              = cfg.hp;
+    this.maxHp           = cfg.hp;
+    this.speed           = cfg.speed;
+    this.damage          = cfg.damage;
+    this.collisionRadius = cfg.collisionRadius;
+    this.xpValue         = cfg.xpValue;
 
-    // Set to false when the enemy dies so systems can remove it.
-    this.active = true;
-
-    // Visual hit flash timer
-    this._hitTimer = 0;
+    this.active      = true;
+    this.justDied    = false; // flipped true for one frame when hp hits 0
+    this.facingAngle = 0;
+    this._hitTimer   = 0;
   }
 
-  // Placeholder — will be fleshed out in the next step.
+  static create(type, x, y) {
+    return new Enemy(x, y, type);
+  }
+
   update(dt, player) {
-    // TODO: move toward player, apply knockback, etc.
+    const dx   = player.x - this.x;
+    const dy   = player.y - this.y;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+
+    if (dist > 0) {
+      this.facingAngle = Math.atan2(dy, dx);
+      this.x += (dx / dist) * this.speed * dt;
+      this.y += (dy / dist) * this.speed * dt;
+    }
+
+    if (this._hitTimer > 0) this._hitTimer = Math.max(0, this._hitTimer - dt);
   }
 
   takeDamage(amount) {
     this.hp -= amount;
-    this._hitTimer = 0.1;
-    if (this.hp <= 0) {
-      this.active = false;
+    this._hitTimer = 0.12;
+    if (this.hp <= 0 && this.active) {
+      this.active   = false;
+      this.justDied = true;
     }
   }
 
-  // Placeholder draw — will be replaced with procedural sprites.
-  draw(ctx, camera) {
-    // TODO: implement in next step
+  draw(ctx, camera, time) {
+    const { x: sx, y: sy } = camera.worldToScreen(this.x, this.y);
+
+    ctx.save();
+    ctx.translate(sx, sy);
+
+    // White flash on hit
+    if (this._hitTimer > 0) {
+      ctx.filter = 'brightness(3)';
+    }
+
+    if (this.type === 'slime') {
+      ProceduralSprites.drawSlime(ctx);
+    } else if (this.type === 'bat') {
+      ProceduralSprites.drawBat(ctx, this.facingAngle, time);
+    }
+
+    ctx.filter = 'none';
+    ctx.restore();
   }
 
 }

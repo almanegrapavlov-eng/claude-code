@@ -7,21 +7,18 @@ import { CollisionSystem } from '../systems/CollisionSystem.js';
 import { WeaponSystem }    from '../systems/WeaponSystem.js';
 import { Spawner }         from '../systems/Spawner.js';
 
-// Game is the central object that owns all state and runs the loop.
-// It wires together every system and entity, then drives update → draw each frame.
 export class Game {
 
   constructor(canvas) {
     this.canvas = canvas;
     this.ctx    = canvas.getContext('2d');
 
-    // Internal resolution — all game logic uses these coordinates.
     this.WIDTH  = 1920;
     this.HEIGHT = 1080;
     canvas.width  = this.WIDTH;
     canvas.height = this.HEIGHT;
 
-    // ---- Core systems ----
+    // ---- Systems ----
     this.input     = new Input();
     this.camera    = new Camera();
     this.renderer  = new Renderer();
@@ -30,11 +27,15 @@ export class Game {
     this.weapons   = new WeaponSystem();
     this.spawner   = new Spawner();
 
-    // ---- Entity lists ----
+    // ---- Entities ----
     this.player      = new Player();
     this.enemies     = [];
     this.projectiles = [];
     this.gems        = [];
+
+    // ---- Stats ----
+    this.killCount = 0;
+    this.elapsed   = 0; // seconds survived
 
     // ---- Timing ----
     this._lastTime  = 0;
@@ -42,18 +43,14 @@ export class Game {
     this._fpsAccum  = 0;
     this._fpsFrames = 0;
 
-    // Snap camera so there is no initial pan from (0,0) to player.
     this.camera.snapTo(this.player.x, this.player.y);
   }
 
-  // Call once to begin the game loop.
   start() {
     requestAnimationFrame(ts => this._loop(ts));
   }
 
-  // ---- Main loop ----
   _loop(timestamp) {
-    // Delta time in seconds, capped to avoid spiral-of-death on tab focus restore.
     const dt = Math.min((timestamp - this._lastTime) / 1000, 0.1);
     this._lastTime = timestamp;
 
@@ -75,16 +72,40 @@ export class Game {
   }
 
   _update(dt) {
+    this.elapsed += dt;
+
     // Player
     this.player.update(dt, this.input);
 
-    // Camera follows player
+    // Camera
     this.camera.update(this.player.x, this.player.y, dt, this.player.vx, this.player.vy);
 
-    // Systems (stubs for now — activated in later steps)
-    this.spawner.update(dt, this.player, this.enemies);
-    this.weapons.update(dt, this.player, this.enemies);
+    // Enemies
+    for (const enemy of this.enemies) {
+      enemy.update(dt, this.player);
+    }
+
+    // Projectiles
+    for (const proj of this.projectiles) {
+      proj.update(dt, this.camera);
+    }
+
+    // Weapons — pass projectile array so it can push into it directly
+    this.weapons.update(dt, this.player, this.enemies, this.projectiles);
+
+    // Collisions
     this.collision.resolve(this.player, this.enemies, this.projectiles, this.gems);
+
+    // Count kills before purging
+    for (const enemy of this.enemies) {
+      if (enemy.justDied) {
+        this.killCount++;
+        enemy.justDied = false;
+      }
+    }
+
+    // Spawner
+    this.spawner.update(dt, this.player, this.enemies);
 
     // Purge inactive entities
     this.enemies     = this.enemies    .filter(e => e.active);
