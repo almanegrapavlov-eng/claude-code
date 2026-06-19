@@ -1,5 +1,12 @@
 import { ProceduralSprites } from '../assets/ProceduralSprites.js';
 
+// Loads one image and makes it available synchronously once ready.
+function loadImage(src) {
+  const img = new Image();
+  img.src = src;
+  return img;
+}
+
 // The player entity. Controlled entirely by keyboard input — no manual shooting.
 export class Player {
 
@@ -30,8 +37,15 @@ export class Player {
     // Pickup range for XP gems (world pixels)
     this.magnetRadius = 120;
 
-    // Collision circle — intentionally smaller than the 182x182 sprite
+    // Collision circle — intentionally smaller than the sprite visual
     this.collisionRadius = 22;
+
+    // Sprite sheet — single frame for now, directional sheet added later.
+    // The image is 69x44 with the character occupying a 20x29 area inside it.
+    // We draw the full canvas at SPRITE_SCALE so the character looks crisp.
+    this._sprite      = loadImage('./assets/warrior.png');
+    this._spriteScale = 3.5; // 69*3.5=241px wide in game units — stays proportional
+    this._facingLeft  = false; // flipped when moving left
 
     // Invincibility frames after being hit (seconds)
     this.iFrames   = 0;
@@ -49,6 +63,8 @@ export class Player {
       this.vx += (move.x * this.speed - this.vx) * Math.min(1, this.accel * dt);
       this.vy += (move.y * this.speed - this.vy) * Math.min(1, this.accel * dt);
       this.facingAngle = Math.atan2(move.y, move.x);
+      if (move.x < 0) this._facingLeft = true;
+      if (move.x > 0) this._facingLeft = false;
     } else {
       const brake = Math.min(1, this.friction * dt);
       this.vx -= this.vx * brake;
@@ -103,22 +119,47 @@ export class Player {
     ctx.save();
     ctx.translate(sx, sy);
 
-    // Shadow beneath the sprite
-    ProceduralSprites.drawShadow(ctx, 38);
-
-    // Damage flash — briefly tint red
-    if (this._damagedTimer > 0) {
-      ctx.globalAlpha = 0.5 + Math.sin(this._damagedTimer * 60) * 0.5;
-    }
+    // Shadow
+    ProceduralSprites.drawShadow(ctx, 30);
 
     // I-frame flicker
     if (this.iFrames > 0 && Math.floor(this.iFrames / 0.08) % 2 === 0) {
       ctx.globalAlpha = 0.3;
     }
 
-    ProceduralSprites.drawPlayer(ctx, this.facingAngle);
+    // Damage flash
+    if (this._damagedTimer > 0) {
+      ctx.globalAlpha = 0.5;
+    }
+
+    if (this._sprite.complete && this._sprite.naturalWidth > 0) {
+      this._drawSprite(ctx);
+    } else {
+      // Fallback while image loads
+      ProceduralSprites.drawPlayer(ctx, this.facingAngle);
+    }
 
     ctx.globalAlpha = 1;
+    ctx.restore();
+  }
+
+  _drawSprite(ctx) {
+    const sw = this._sprite.naturalWidth;
+    const sh = this._sprite.naturalHeight;
+    const dw = sw * this._spriteScale;
+    const dh = sh * this._spriteScale;
+
+    ctx.save();
+
+    // Flip horizontally when moving left
+    if (this._facingLeft) ctx.scale(-1, 1);
+
+    // Pixel art — disable smoothing so pixels stay sharp
+    ctx.imageSmoothingEnabled = false;
+
+    // Draw centered, with feet near the entity's world position
+    ctx.drawImage(this._sprite, -dw / 2, -dh * 0.75, dw, dh);
+
     ctx.restore();
   }
 
