@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>URBN — Street Culture Clothing</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav" id="nav">
+    <div class="nav__logo">URBN</div>
+    <ul class="nav__links">
+      <li><a href="#new">New Drops</a></li>
+      <li><a href="#collections">Collections</a></li>
+      <li><a href="#sale">Sale</a></li>
+      <li><a href="#about">About</a></li>
+    </ul>
+    <div class="nav__actions">
+      <button class="nav__search" aria-label="Search">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      </button>
+      <button class="nav__cart" aria-label="Cart">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <span class="nav__cart-count">3</span>
+      </button>
+      <button class="nav__toggle" aria-label="Menu" id="menuToggle">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- MOBILE MENU -->
+  <div class="mobile-menu" id="mobileMenu">
+    <ul>
+      <li><a href="#new" onclick="closeMenu()">New Drops</a></li>
+      <li><a href="#collections" onclick="closeMenu()">Collections</a></li>
+      <li><a href="#sale" onclick="closeMenu()">Sale</a></li>
+      <li><a href="#about" onclick="closeMenu()">About</a></li>
+    </ul>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero__bg">
+      <div class="hero__gradient"></div>
+    </div>
+    <div class="hero__content">
+      <p class="hero__tag">SS 2026 COLLECTION</p>
+      <h1 class="hero__title">WEAR THE<br /><span>STREETS</span></h1>
+      <p class="hero__sub">Bold cuts. Raw energy. Made for the city.</p>
+      <div class="hero__cta">
+        <a href="#new" class="btn btn--primary">Shop New Drops</a>
+        <a href="#collections" class="btn btn--ghost">Explore All</a>
+      </div>
+    </div>
+    <div class="hero__scroll">
+      <span>Scroll</span>
+      <div class="hero__scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee">
+    <div class="marquee__track">
+      <span>NEW DROP — SS26</span><span>★</span>
+      <span>FREE SHIPPING OVER $150</span><span>★</span>
+      <span>LIMITED EDITION HOODIES</span><span>★</span>
+      <span>NEW DROP — SS26</span><span>★</span>
+      <span>FREE SHIPPING OVER $150</span><span>★</span>
+      <span>LIMITED EDITION HOODIES</span><span>★</span>
+      <span>NEW DROP — SS26</span><span>★</span>
+      <span>FREE SHIPPING OVER $150</span><span>★</span>
+      <span>LIMITED EDITION HOODIES</span><span>★</span>
+    </div>
+  </div>
+
+  <!-- NEW DROPS -->
+  <section class="section" id="new">
+    <div class="container">
+      <div class="section__header">
+        <h2 class="section__title">New Drops</h2>
+        <a href="#" class="section__link">View All →</a>
+      </div>
+      <div class="product-grid">
+
+        <div class="product-card">
+          <div class="product-card__img" style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);">
+            <span class="product-card__badge">NEW</span>
+            <div class="product-card__overlay">
+              <button class="btn btn--primary btn--sm">Quick Add</button>
+            </div>
+            <div class="product-card__visual">
+              <div class="clothing-hoodie dark"></div>
+            </div>
+          </div>
+          <div class="product-card__info">
+            <span class="product-card__category">Hoodies</span>
+            <h3 class="product-card__name">Midnight Oversized Hoodie</h3>
+            <div class="product-card__price"><span class="price">$89</span></div>
+            <div class="product-card__colors">
+              <span class="color-dot" style="background:#1a1a2e"></span>
+              <span class="color-dot" style="background:#2d2d2d"></span>
+              <span class="color-dot" style="background:#5c4033"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-card__img" style="background: linear-gradient(135deg, #f5f0e8 0%, #e8dcc8 100%);">
+            <span class="product-card__badge product-card__badge--hot">HOT</span>
+            <div class="product-card__overlay">
+              <button class="btn btn--primary btn--sm">Quick Add</button>
+            </div>
+            <div class="product-card__visual">
+              <div class="clothing-tee cream"></div>
+            </div>
+          </div>
+          <div class="product-card__info">
+            <span class="product-card__category">T-Shirts</span>
+            <h3 class="product-card__name">Vintage Wash Graphic Tee</h3>
+            <div class="product-card__price"><span class="price">$45</span></div>
+            <div class="product-card__colors">
+              <span class="color-dot" style="background:#f5f0e8;border:1px solid #ccc"></span>
+              <span class="color-dot" style="background:#c8b49a"></span>
+              <span class="color-dot" style="background:#2d2d2d"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-card__img" style="background: linear-gradient(135deg, #2d2d2d 0%, #111 100%);">
+            <div class="product-card__overlay">
+              <button class="btn btn--primary btn--sm">Quick Add</button>
+            </div>
+            <div class="product-card__visual">
+              <div class="clothing-cargo dark"></div>
+            </div>
+          </div>
+          <div class="product-card__info">
+            <span class="product-card__category">Pants</span>
+            <h3 class="product-card__name">Utility Cargo Pants</h3>
+            <div class="product-card__price"><span class="price">$115</span></div>
+            <div class="product-card__colors">
+              <span class="color-dot" style="background:#2d2d2d"></span>
+              <span class="color-dot" style="background:#4a5240"></span>
+              <span class="color-dot" style="background:#8b7355"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-card__img" style="background: linear-gradient(135deg, #e63946 0%, #c1121f 100%);">
+            <span class="product-card__badge">LIMITED</span>
+            <div class="product-card__overlay">
+              <button class="btn btn--primary btn--sm">Quick Add</button>
+            </div>
+            <div class="product-card__visual">
+              <div class="clothing-jacket red"></div>
+            </div>
+          </div>
+          <div class="product-card__info">
+            <span class="product-card__category">Jackets</span>
+            <h3 class="product-card__name">Varsity Bomber Jacket</h3>
+            <div class="product-card__price"><span class="price">$175</span></div>
+            <div class="product-card__colors">
+              <span class="color-dot" style="background:#e63946"></span>
+              <span class="color-dot" style="background:#2d2d2d"></span>
+              <span class="color-dot" style="background:#1a3a5c"></span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURE BANNER -->
+  <section class="feature-banner">
+    <div class="feature-banner__content">
+      <p class="feature-banner__tag">FEATURED COLLECTION</p>
+      <h2 class="feature-banner__title">THE CONCRETE<br/>JUNGLE EDIT</h2>
+      <p class="feature-banner__desc">Pieces built for movement, designed for the urban landscape. Every stitch tells a story of the street.</p>
+      <a href="#collections" class="btn btn--primary">Shop Collection</a>
+    </div>
+    <div class="feature-banner__grid">
+      <div class="feature-banner__img feature-banner__img--1" style="background: linear-gradient(135deg, #0d0d0d 0%, #1a1a1a 100%);">
+        <div class="clothing-hoodie-lg"></div>
+      </div>
+      <div class="feature-banner__img feature-banner__img--2" style="background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);">
+        <div class="clothing-jacket-lg"></div>
+      </div>
+      <div class="feature-banner__img feature-banner__img--3" style="background: linear-gradient(135deg, #2d2d2d 0%, #444 100%);">
+        <div class="clothing-tee-lg"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COLLECTIONS -->
+  <section class="section" id="collections">
+    <div class="container">
+      <div class="section__header">
+        <h2 class="section__title">Collections</h2>
+        <a href="#" class="section__link">View All →</a>
+      </div>
+      <div class="collection-grid">
+        <a href="#" class="collection-card" style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);">
+          <div class="collection-card__art"><div class="collection-icon">👕</div></div>
+          <div class="collection-card__info"><h3>Hoodies & Sweats</h3><span>32 Items</span></div>
+        </a>
+        <a href="#" class="collection-card" style="background: linear-gradient(135deg, #2d2d2d 0%, #111 100%);">
+          <div class="collection-card__art"><div class="collection-icon">🧥</div></div>
+          <div class="collection-card__info"><h3>Outerwear</h3><span>18 Items</span></div>
+        </a>
+        <a href="#" class="collection-card" style="background: linear-gradient(135deg, #4a5240 0%, #2d3428 100%);">
+          <div class="collection-card__art"><div class="collection-icon">👖</div></div>
+          <div class="collection-card__info"><h3>Bottoms</h3><span>24 Items</span></div>
+        </a>
+        <a href="#" class="collection-card" style="background: linear-gradient(135deg, #c1121f 0%, #780000 100%);">
+          <div class="collection-card__art"><div class="collection-icon">👟</div></div>
+          <div class="collection-card__info"><h3>Accessories</h3><span>41 Items</span></div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- SALE -->
+  <section class="section section--dark" id="sale">
+    <div class="container">
+      <div class="section__header">
+        <h2 class="section__title">Sale</h2>
+        <a href="#" class="section__link">All Sale →</a>
+      </div>
+      <div class="product-grid">
+        <div class="product-card">
+          <div class="product-card__img" style="background: linear-gradient(135deg, #3d3d3d 0%, #1a1a1a 100%);">
+            <div class="product-card__overlay"><button class="btn btn--primary btn--sm">Quick Add</button></div>
+            <div class="product-card__visual"><div class="clothing-hoodie grey"></div></div>
+          </div>
+          <div class="product-card__info">
+            <span class="product-card__category" style="color:#888">Hoodies</span>
+            <h3 class="product-card__name" style="color:#fff">Classic Logo Hoodie</h3>
+            <div class="product-card__price">
+              <span class="price price--sale">$55</span>
+              <span class="price price--original">$79</span>
+            </div>
+          </div>
+        </div>
+        <div class="product-card">
+          <div class="product-card__img" style="background: linear-gradient(135deg, #5c4033 0%, #3d2b1f 100%);">
+            <div class="product-card__overlay"><button class="btn btn--primary btn--sm">Quick Add</button></div>
+            <div class="product-card__visual"><div class="clothing-tee brown"></div></div>
+          </div>
+          <div class="product-card__info">
+            <span class="product-card__category" style="color:#888">T-Shirts</span>
+            <h3 class="product-card__name" style="color:#fff">Earth Tone Pack Tee</h3>
+            <div class="product-card__price">
+              <span class="price price--sale">$28</span>
+              <span class="price price--original">$42</span>
+            </div>
+          </div>
+        </div>
+        <div class="product-card">
+          <div class="product-card__img" style="background: linear-gradient(135deg, #1a3a5c 0%, #0a1f35 100%);">
+            <div class="product-card__overlay"><button class="btn btn--primary btn--sm">Quick Add</button></div>
+            <div class="product-card__visual"><div class="clothing-jacket navy"></div></div>
+          </div>
+          <div class="product-card__info">
+            <span class="product-card__category" style="color:#888">Jackets</span>
+            <h3 class="product-card__name" style="color:#fff">Track Jacket</h3>
+            <div class="product-card__price">
+              <span class="price price--sale">$89</span>
+              <span class="price price--original">$130</span>
+            </div>
+          </div>
+        </div>
+        <div class="product-card">
+          <div class="product-card__img" style="background: linear-gradient(135deg, #4a5240 0%, #2d3428 100%);">
+            <div class="product-card__overlay"><button class="btn btn--primary btn--sm">Quick Add</button></div>
+            <div class="product-card__visual"><div class="clothing-cargo olive"></div></div>
+          </div>
+          <div class="product-card__info">
+            <span class="product-card__category" style="color:#888">Pants</span>
+            <h3 class="product-card__name" style="color:#fff">Ripstop Cargo Pants</h3>
+            <div class="product-card__price">
+              <span class="price price--sale">$75</span>
+              <span class="price price--original">$105</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="brand-section" id="about">
+    <div class="brand-section__inner">
+      <div class="brand-section__text">
+        <p class="brand-section__tag">OUR ETHOS</p>
+        <h2 class="brand-section__title">Born on<br/>the Block</h2>
+        <p class="brand-section__desc">URBN was founded in 2019 by a group of skaters, artists, and creatives who were tired of clothes that didn't match their energy. Every piece we make carries the DNA of street culture — authentic, uncompromising, built to last.</p>
+        <p class="brand-section__desc">We source sustainably, manufacture ethically, and design for real life. No hype. Just heat.</p>
+        <a href="#" class="btn btn--outline">Read Our Story</a>
+      </div>
+      <div class="brand-section__stats">
+        <div class="stat"><span class="stat__num">200+</span><span class="stat__label">Styles</span></div>
+        <div class="stat"><span class="stat__num">40K+</span><span class="stat__label">Community Members</span></div>
+        <div class="stat"><span class="stat__num">100%</span><span class="stat__label">Ethically Made</span></div>
+        <div class="stat"><span class="stat__num">50+</span><span class="stat__label">Countries Shipped</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEWSLETTER -->
+  <section class="newsletter">
+    <div class="container newsletter__inner">
+      <div class="newsletter__text">
+        <h2>Get Early Access</h2>
+        <p>Join the list for first drops, member discounts, and unreleased content.</p>
+      </div>
+      <form class="newsletter__form" onsubmit="handleSubscribe(event)">
+        <input type="email" placeholder="your@email.com" required />
+        <button type="submit" class="btn btn--primary">Subscribe</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div class="footer__brand">
+        <div class="footer__logo">URBN</div>
+        <p>Street culture clothing<br/>for the bold and the real.</p>
+        <div class="footer__social">
+          <a href="#">IG</a>
+          <a href="#">TK</a>
+          <a href="#">X</a>
+        </div>
+      </div>
+      <div class="footer__links">
+        <div class="footer__col">
+          <h4>Shop</h4>
+          <a href="#">New Arrivals</a><a href="#">Hoodies</a><a href="#">T-Shirts</a><a href="#">Jackets</a><a href="#">Pants</a>
+        </div>
+        <div class="footer__col">
+          <h4>Help</h4>
+          <a href="#">Size Guide</a><a href="#">Shipping</a><a href="#">Returns</a><a href="#">FAQ</a><a href="#">Contact</a>
+        </div>
+        <div class="footer__col">
+          <h4>Brand</h4>
+          <a href="#">About</a><a href="#">Sustainability</a><a href="#">Careers</a><a href="#">Press</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span>© 2026 URBN. All rights reserved.</span>
+      <span>Privacy · Terms · Cookies</span>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast">Subscribed! Welcome to the fam.</div>
+  <script src="js/main.js"></script>
+</body>
+</html>
