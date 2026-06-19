@@ -79,7 +79,7 @@ export class Game {
     this.player.update(dt, this.input);
 
     // Camera follows player
-    this.camera.update(this.player.x, this.player.y, dt);
+    this.camera.update(this.player.x, this.player.y, dt, this.player.vx, this.player.vy);
 
     // Systems (stubs for now — activated in later steps)
     this.spawner.update(dt, this.player, this.enemies);

@@ -7,16 +7,22 @@
 export class Camera {
 
   constructor() {
-    this.x = 0; // world X at screen center
-    this.y = 0; // world Y at screen center
-    this.smoothSpeed = 10; // higher = snappier follow
+    this.x = 0;
+    this.y = 0;
+    this.smoothSpeed = 12; // higher = snappier follow
+    this.leadStrength = 80; // world-pixels the camera leads ahead of the player
   }
 
-  // Smoothly move the camera toward the target position.
-  update(targetX, targetY, dt) {
+  // Smoothly follow the player, biased slightly ahead of their velocity.
+  update(targetX, targetY, dt, playerVx = 0, playerVy = 0) {
     const t = Math.min(1, this.smoothSpeed * dt);
-    this.x += (targetX - this.x) * t;
-    this.y += (targetY - this.y) * t;
+
+    // Lead point: a little ahead of the player in their current direction
+    const leadX = targetX + playerVx * this.leadStrength / 220;
+    const leadY = targetY + playerVy * this.leadStrength / 220;
+
+    this.x += (leadX - this.x) * t;
+    this.y += (leadY - this.y) * t;
   }
 
   // Snap instantly to a position, no smoothing.

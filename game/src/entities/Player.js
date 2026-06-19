@@ -9,8 +9,12 @@ export class Player {
     this.y = 0;
 
     // Movement
-    this.speed     = 220; // pixels per second at base
-    this.facingAngle = 0; // radians; updated whenever the player moves
+    this.speed       = 220; // top speed in pixels per second
+    this.accel       = 18;  // how quickly velocity reaches top speed (multiplier)
+    this.friction    = 14;  // how quickly velocity bleeds off when no key is held
+    this.vx          = 0;   // current velocity X
+    this.vy          = 0;   // current velocity Y
+    this.facingAngle = 0;   // radians; updated whenever the player moves
 
     // Vitals
     this.hp        = 100;
@@ -40,13 +44,19 @@ export class Player {
   update(dt, input) {
     const move = input.getMovementVector();
 
-    this.x += move.x * this.speed * dt;
-    this.y += move.y * this.speed * dt;
-
-    // Update facing angle whenever the player is moving
+    // Accelerate toward the target velocity, or friction-brake to zero.
     if (move.x !== 0 || move.y !== 0) {
+      this.vx += (move.x * this.speed - this.vx) * Math.min(1, this.accel * dt);
+      this.vy += (move.y * this.speed - this.vy) * Math.min(1, this.accel * dt);
       this.facingAngle = Math.atan2(move.y, move.x);
+    } else {
+      const brake = Math.min(1, this.friction * dt);
+      this.vx -= this.vx * brake;
+      this.vy -= this.vy * brake;
     }
+
+    this.x += this.vx * dt;
+    this.y += this.vy * dt;
 
     // Tick HP regen
     if (this.regenRate > 0) {
