@@ -1,0 +1,32 @@
+:root {
+  color-scheme: dark;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  /* Everything outside the 16:9 canvas shows as letterbox/pillarbox bars. */
+  background: #000;
+}
+
+/* Center the canvas in the window. main.js sets the canvas display size in
+   pixels (preserving 16:9); the bars fill whatever space is left over. */
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#game {
+  display: block;
+  image-rendering: auto;
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.6);
+}
