@@ -59,3 +59,12 @@ export const ENEMY_TYPES = {
   // Faster, fragile — punishes standing still.
   bat: { spriteKey: 'bat', maxHp: 12, speed: 205, radius: 38, damage: 5, weight: 0.4 },
 };
+
+// ---- Hero sprite-sheet animation ----
+// The hero is drawn from a sprite sheet laid out as rows = facing directions
+// (in this order) x columns = walk-cycle frames. Drop your own sheet at
+// HERO_SHEET_SRC with the same grid to replace the built-in character.
+export const HERO_DIRECTIONS = ['down', 'left', 'right', 'up'];
+export const HERO_FRAMES = 4; // columns in the sheet
+export const HERO_FRAME_TIME = 0.12; // seconds per frame while walking
+export const HERO_SHEET_SRC = './assets/sprites/hero.png';

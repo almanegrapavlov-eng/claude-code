@@ -6,11 +6,14 @@ import {
   PLAYER_IFRAMES,
   PLAYER_BAR_WIDTH,
   PLAYER_BAR_HEIGHT,
+  HERO_DIRECTIONS,
+  HERO_FRAMES,
+  HERO_FRAME_TIME,
 } from '../core/Constants.js';
 import { drawHealthBar } from '../render/HealthBar.js';
 
-// The player character. It moves with input and takes contact damage from
-// enemies, with a brief invulnerability window after each hit.
+// The player character. Moves with input, faces its movement direction, and
+// animates a walk cycle from the hero sprite sheet (idle = first frame).
 export class Player {
   constructor(x, y) {
     this.x = x;
@@ -19,20 +22,38 @@ export class Player {
     this.radius = PLAYER_RADIUS; // collision radius, smaller than the sprite
     this.maxHp = PLAYER_MAX_HP;
     this.hp = PLAYER_MAX_HP;
-    this.spriteKey = 'player';
+    this.spriteKey = 'player'; // fallback sprite if the sheet hasn't loaded
+
     this.iTimer = 0; // invulnerability remaining, in seconds
+
+    // Animation state.
+    this.facing = 'down';
+    this.animTime = 0;
+    this.frame = 0;
   }
 
-  // Move based on the current input direction, and tick down i-frames.
   update(dt, input) {
     const dir = input.getMoveVector();
     this.x += dir.x * this.speed * dt;
     this.y += dir.y * this.speed * dt;
+
+    if (dir.x !== 0 || dir.y !== 0) {
+      // Face the dominant axis of movement.
+      if (Math.abs(dir.x) >= Math.abs(dir.y)) this.facing = dir.x < 0 ? 'left' : 'right';
+      else this.facing = dir.y < 0 ? 'up' : 'down';
+      // Advance the walk cycle.
+      this.animTime += dt;
+      this.frame = Math.floor(this.animTime / HERO_FRAME_TIME) % HERO_FRAMES;
+    } else {
+      // Idle: hold the first (neutral) frame.
+      this.animTime = 0;
+      this.frame = 0;
+    }
+
     if (this.iTimer > 0) this.iTimer -= dt;
   }
 
-  // Apply contact damage unless still invulnerable. Returns true if it landed,
-  // so callers can react (e.g. trigger screen shake).
+  // Apply contact damage unless still invulnerable. Returns true if it landed.
   takeDamage(amount) {
     if (this.iTimer > 0) return false;
     this.hp = Math.max(0, this.hp - amount);
@@ -40,7 +61,6 @@ export class Player {
     return true;
   }
 
-  // Draw the player centered on its screen position, plus a small health bar.
   render(ctx, camera, sprites) {
     const screenX = camera.worldToScreenX(this.x);
     const screenY = camera.worldToScreenY(this.y);
@@ -62,13 +82,20 @@ export class Player {
     ctx.fill();
     ctx.restore();
 
-    // The 182x182 source sprite. Blink while invulnerable so hits read clearly.
-    const sprite = sprites.get(this.spriteKey);
+    // Character. Blink while invulnerable so hits read clearly.
     ctx.save();
     if (this.iTimer > 0 && Math.floor(this.iTimer * 20) % 2 === 0) {
-      ctx.globalAlpha = 0.35;
+      ctx.globalAlpha = 0.4;
     }
-    ctx.drawImage(sprite, screenX - SPRITE_SIZE / 2, screenY - SPRITE_SIZE / 2);
+    const sheet = sprites.heroSheet;
+    if (sheet) {
+      const row = Math.max(0, HERO_DIRECTIONS.indexOf(this.facing));
+      sheet.draw(ctx, this.frame, row, screenX, screenY, SPRITE_SIZE, SPRITE_SIZE);
+    } else {
+      // Fallback until the sheet image loads.
+      const sprite = sprites.get(this.spriteKey);
+      ctx.drawImage(sprite, screenX - SPRITE_SIZE / 2, screenY - SPRITE_SIZE / 2);
+    }
     ctx.restore();
 
     // Health bar floating just above the head.

@@ -8,6 +8,13 @@ import { SPRITE_SIZE } from '../core/Constants.js';
 export class ProceduralSprites {
   constructor() {
     this.cache = new Map();
+    // Set once the hero sprite sheet image loads (see Game). Until then, the
+    // player falls back to the procedural 'player' blob below.
+    this.heroSheet = null;
+  }
+
+  setHeroSheet(sheet) {
+    this.heroSheet = sheet;
   }
 
   // Return a drawable canvas for the given key, generating it on first use.

@@ -8,6 +8,8 @@ import { WeaponSystem } from '../systems/WeaponSystem.js';
 import { CollisionSystem } from '../systems/CollisionSystem.js';
 import { EffectsSystem } from '../systems/EffectsSystem.js';
 import { ProceduralSprites } from '../assets/ProceduralSprites.js';
+import { loadSpriteSheet } from '../render/SpriteSheet.js';
+import { HERO_SHEET_SRC, HERO_FRAMES, HERO_DIRECTIONS } from './Constants.js';
 
 // Central game object: owns the state and systems, and runs the main loop.
 export class Game {
@@ -19,6 +21,13 @@ export class Game {
     this.input = new Input();
     this.camera = new Camera();
     this.sprites = new ProceduralSprites();
+
+    // Load the hero sprite sheet once (survives restarts). The player uses a
+    // procedural fallback sprite until — or unless — it loads.
+    loadSpriteSheet(HERO_SHEET_SRC, HERO_FRAMES, HERO_DIRECTIONS.length).then((sheet) => {
+      if (sheet) this.sprites.setHeroSheet(sheet);
+    });
+
     this.renderer = new Renderer(this.ctx);
     this.ui = new UISystem();
     this.collision = new CollisionSystem(); // stateless
