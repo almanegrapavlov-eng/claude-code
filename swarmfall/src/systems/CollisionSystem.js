@@ -1,9 +1,14 @@
-import { circleOverlap } from '../core/MathUtils.js';
+import { circleOverlap, normalize } from '../core/MathUtils.js';
+import {
+  KNOCKBACK_STRENGTH,
+  SHAKE_MAGNITUDE,
+  SHAKE_DURATION,
+} from '../core/Constants.js';
 
 // Resolves the frame's collisions using circle overlaps (radii are kept smaller
 // than the sprites so the game feels fair):
-//   - projectiles damage enemies (and count kills)
-//   - enemies deal contact damage to the player
+//   - projectiles damage enemies, knock them back, spawn damage numbers, count kills
+//   - enemies deal contact damage to the player and shake the screen on a hit
 // Removal of dead entities is handled by their owning systems afterward.
 export class CollisionSystem {
   update(dt, game) {
@@ -22,6 +27,12 @@ export class CollisionSystem {
         if (!circleOverlap(p.x, p.y, p.radius, e.x, e.y, e.radius)) continue;
 
         e.takeDamage(p.damage);
+        game.effects.spawnDamage(e.x, e.y - e.radius * 0.4, p.damage);
+
+        // Shove the enemy in the projectile's travel direction.
+        const k = normalize(p.vx, p.vy);
+        e.applyKnockback(k.x, k.y, KNOCKBACK_STRENGTH);
+
         if (!e.alive) game.kills += 1;
 
         p.pierce -= 1;
@@ -38,7 +49,8 @@ export class CollisionSystem {
     for (const e of game.spawner.enemies) {
       if (!e.alive) continue;
       if (circleOverlap(player.x, player.y, player.radius, e.x, e.y, e.radius)) {
-        player.takeDamage(e.damage); // no-op while the player is in i-frames
+        const hit = player.takeDamage(e.damage); // no-op during i-frames
+        if (hit) game.camera.addShake(SHAKE_MAGNITUDE, SHAKE_DURATION);
       }
     }
   }

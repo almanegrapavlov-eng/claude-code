@@ -4,11 +4,13 @@ import {
   PLAYER_RADIUS,
   PLAYER_MAX_HP,
   PLAYER_IFRAMES,
+  PLAYER_BAR_WIDTH,
+  PLAYER_BAR_HEIGHT,
 } from '../core/Constants.js';
+import { drawHealthBar } from '../render/HealthBar.js';
 
-// The player character. It moves with input and can take contact damage from
-// enemies (with brief invulnerability so it doesn't melt instantly). Weapons
-// live in the WeaponSystem, not here.
+// The player character. It moves with input and takes contact damage from
+// enemies, with a brief invulnerability window after each hit.
 export class Player {
   constructor(x, y) {
     this.x = x;
@@ -29,14 +31,16 @@ export class Player {
     if (this.iTimer > 0) this.iTimer -= dt;
   }
 
-  // Apply contact damage, unless still invulnerable from a recent hit.
+  // Apply contact damage unless still invulnerable. Returns true if it landed,
+  // so callers can react (e.g. trigger screen shake).
   takeDamage(amount) {
-    if (this.iTimer > 0) return;
+    if (this.iTimer > 0) return false;
     this.hp = Math.max(0, this.hp - amount);
     this.iTimer = PLAYER_IFRAMES;
+    return true;
   }
 
-  // Draw the player centered on its screen position.
+  // Draw the player centered on its screen position, plus a small health bar.
   render(ctx, camera, sprites) {
     const screenX = camera.worldToScreenX(this.x);
     const screenY = camera.worldToScreenY(this.y);
@@ -66,5 +70,15 @@ export class Player {
     }
     ctx.drawImage(sprite, screenX - SPRITE_SIZE / 2, screenY - SPRITE_SIZE / 2);
     ctx.restore();
+
+    // Health bar floating just above the head.
+    drawHealthBar(
+      ctx,
+      screenX,
+      screenY - this.radius - 34,
+      PLAYER_BAR_WIDTH,
+      PLAYER_BAR_HEIGHT,
+      this.hp / this.maxHp
+    );
   }
 }

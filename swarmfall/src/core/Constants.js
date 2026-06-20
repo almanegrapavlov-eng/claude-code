@@ -34,7 +34,21 @@ export const SPAWN_MARGIN = 120; // spawn this far outside the visible edge
 export const MAX_ENEMIES = 200; // safety cap to keep performance steady
 
 // ---- Combat feedback ----
-export const HIT_FLASH_TIME = 0.1; // seconds an enemy "pops" after being hit
+export const HIT_FLASH_TIME = 0.1; // seconds an enemy flashes/pops after being hit
+export const KNOCKBACK_STRENGTH = 700; // initial knockback speed when a projectile lands
+export const KNOCKBACK_DAMP = 11; // higher = knockback fades faster
+export const SHAKE_MAGNITUDE = 9; // pixels of screen shake when the player is hit
+export const SHAKE_DURATION = 0.18; // seconds
+export const DAMAGE_NUMBER_LIFETIME = 0.7; // seconds a floating number lives
+export const MAX_DAMAGE_NUMBERS = 240; // safety cap for performance
+
+// ---- Health bars ----
+export const PLAYER_BAR_WIDTH = 76;
+export const PLAYER_BAR_HEIGHT = 9;
+export const ENEMY_BAR_WIDTH = 64;
+export const ENEMY_BAR_HEIGHT = 7;
+export const UI_HP_BAR_WIDTH = 480;
+export const UI_HP_BAR_HEIGHT = 26;
 
 // ---- Enemy types ----
 // `radius` is the collision circle, kept well under the 182px sprite so the

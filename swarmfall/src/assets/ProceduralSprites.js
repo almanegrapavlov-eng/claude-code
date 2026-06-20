@@ -18,6 +18,27 @@ export class ProceduralSprites {
     return this.cache.get(key);
   }
 
+  // Return a white silhouette of a sprite, used for the "hit" flash. Generated
+  // once from the base sprite and cached alongside it.
+  getFlash(key) {
+    const flashKey = `${key}:flash`;
+    if (!this.cache.has(flashKey)) {
+      this.cache.set(flashKey, this._makeFlash(this.get(key)));
+    }
+    return this.cache.get(flashKey);
+  }
+
+  _makeFlash(base) {
+    const canvas = this._createCanvas();
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(base, 0, 0);
+    // Keep only the sprite's shape, filled solid white.
+    ctx.globalCompositeOperation = 'source-in';
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, SPRITE_SIZE, SPRITE_SIZE);
+    return canvas;
+  }
+
   _createCanvas() {
     const canvas = document.createElement('canvas');
     canvas.width = SPRITE_SIZE;
