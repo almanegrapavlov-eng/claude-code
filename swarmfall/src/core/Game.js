@@ -3,6 +3,9 @@ import { Camera } from './Camera.js';
 import { Player } from '../entities/Player.js';
 import { Renderer } from '../systems/Renderer.js';
 import { UISystem } from '../systems/UISystem.js';
+import { Spawner } from '../systems/Spawner.js';
+import { WeaponSystem } from '../systems/WeaponSystem.js';
+import { CollisionSystem } from '../systems/CollisionSystem.js';
 import { ProceduralSprites } from '../assets/ProceduralSprites.js';
 
 // Central game object: owns the state and systems, and runs the main loop.
@@ -16,20 +19,25 @@ export class Game {
     this.camera = new Camera();
     this.sprites = new ProceduralSprites();
 
-    // Systems that draw the frame.
+    // Systems.
     this.renderer = new Renderer(this.ctx);
     this.ui = new UISystem();
+    this.spawner = new Spawner();
+    this.weapon = new WeaponSystem();
+    this.collision = new CollisionSystem();
 
     // Entities. The player starts at the world origin, which the camera keeps
     // centered on screen.
     this.player = new Player(0, 0);
     this.camera.follow(this.player);
 
+    // Run stats.
+    this.elapsed = 0; // survival time, in seconds
+    this.kills = 0;
+
     // Loop timing.
     this._lastTime = 0;
     this.fps = 0;
-
-    // Bind so requestAnimationFrame keeps the correct `this`.
     this._frame = this._frame.bind(this);
   }
 
@@ -40,8 +48,8 @@ export class Game {
 
   // One iteration of the main loop.
   _frame(now) {
-    // Delta time in seconds, clamped so a background tab (which pauses
-    // rAF) doesn't produce one giant jump when it resumes.
+    // Delta time in seconds, clamped so a background tab (which pauses rAF)
+    // doesn't produce one giant jump when it resumes.
     let dt = (now - this._lastTime) / 1000;
     this._lastTime = now;
     dt = Math.min(dt, 0.1);
@@ -56,14 +64,33 @@ export class Game {
   }
 
   update(dt) {
+    this.elapsed += dt;
+
     this.player.update(dt, this.input);
     this.camera.follow(this.player);
+
+    // Systems run in order: spawn/move enemies, fire/move projectiles, then
+    // resolve all collisions for the frame.
+    this.spawner.update(dt, this);
+    this.weapon.update(dt, this);
+    this.collision.update(dt, this);
+
+    // Remove anything that died or left the screen this frame.
+    this.spawner.removeDead();
+    this.weapon.removeDead(this.camera);
   }
 
   render() {
+    const { ctx, camera, sprites } = this;
+
     this.renderer.clear();
-    this.renderer.drawBackground(this.camera);
-    this.player.render(this.ctx, this.camera, this.sprites);
-    this.ui.render(this.ctx, this);
+    this.renderer.drawBackground(camera);
+
+    // Enemies under projectiles under the player, so the hero stays readable.
+    for (const e of this.spawner.enemies) e.render(ctx, camera, sprites);
+    for (const p of this.weapon.projectiles) p.render(ctx, camera);
+    this.player.render(ctx, camera, sprites);
+
+    this.ui.render(ctx, this);
   }
 }

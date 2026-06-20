@@ -1,25 +1,63 @@
-// Enemy skeleton.
-//
-// Spawning and "chase the player" movement are added in a later step
-// (see DESIGN.md). This file exists now so the project structure is ready;
-// the Game does not create enemies yet.
+import { SPRITE_SIZE, ENEMY_TYPES, HIT_FLASH_TIME } from '../core/Constants.js';
+import { normalize } from '../core/MathUtils.js';
+
+// A monster that walks straight toward the player. All per-type stats come from
+// ENEMY_TYPES so adding a new enemy is just adding a config entry + a sprite.
 export class Enemy {
-  constructor(x, y, type = 'crawler') {
+  constructor(x, y, typeKey = 'slime') {
+    const cfg = ENEMY_TYPES[typeKey] || ENEMY_TYPES.slime;
+    this.type = typeKey;
     this.x = x;
     this.y = y;
-    this.type = type;
-    this.radius = 50; // collision radius, smaller than the sprite
-    this.hp = 10;
-    this.speed = 100; // world units per second
-    this.damage = 5;
-    this.xpValue = 1;
+    this.maxHp = cfg.maxHp;
+    this.hp = cfg.maxHp;
+    this.speed = cfg.speed;
+    this.radius = cfg.radius; // collision radius, smaller than the sprite
+    this.damage = cfg.damage;
+    this.spriteKey = cfg.spriteKey;
     this.alive = true;
-    this.spriteKey = 'enemy';
+    this.hitFlash = 0; // brief "pop" timer after being hit
   }
 
-  // TODO (later step): steer toward the player each frame.
-  update(dt, target) {}
+  // Steer straight toward the target (the player).
+  update(dt, target) {
+    const dir = normalize(target.x - this.x, target.y - this.y);
+    this.x += dir.x * this.speed * dt;
+    this.y += dir.y * this.speed * dt;
+    if (this.hitFlash > 0) this.hitFlash -= dt;
+  }
 
-  // TODO (later step): draw the enemy sprite via the camera.
-  render(ctx, camera, sprites) {}
+  takeDamage(amount) {
+    this.hp -= amount;
+    this.hitFlash = HIT_FLASH_TIME;
+    if (this.hp <= 0) this.alive = false;
+  }
+
+  render(ctx, camera, sprites) {
+    const screenX = camera.worldToScreenX(this.x);
+    const screenY = camera.worldToScreenY(this.y);
+
+    // Ground shadow.
+    ctx.save();
+    ctx.globalAlpha = 0.22;
+    ctx.fillStyle = '#000000';
+    ctx.beginPath();
+    ctx.ellipse(
+      screenX,
+      screenY + SPRITE_SIZE * 0.3,
+      SPRITE_SIZE * 0.26,
+      SPRITE_SIZE * 0.11,
+      0,
+      0,
+      Math.PI * 2
+    );
+    ctx.fill();
+    ctx.restore();
+
+    // Briefly scale up ("pop") right after a hit, for satisfying feedback.
+    const t = this.hitFlash > 0 ? this.hitFlash / HIT_FLASH_TIME : 0;
+    const size = SPRITE_SIZE * (1 + 0.12 * t);
+    const sprite = sprites.get(this.spriteKey);
+    ctx.drawImage(sprite, screenX - size / 2, screenY - size / 2, size, size);
+  }
 }

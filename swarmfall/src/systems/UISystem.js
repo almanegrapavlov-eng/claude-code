@@ -1,32 +1,52 @@
 import { VIEW_WIDTH } from '../core/Constants.js';
 
-// Draws the heads-up display in screen space (the camera does not affect it).
-// For this step: the title, current FPS, and the player's world position.
+// Draws the heads-up display in screen space (the camera does not affect it):
+// the title, the survival timer, the kill counter, and a small debug block.
 export class UISystem {
   render(ctx, game) {
     ctx.save();
     ctx.textBaseline = 'top';
 
-    // Title and hint, centered near the top.
+    // Title, centered at the top.
     ctx.textAlign = 'center';
-    ctx.font = 'bold 56px system-ui, sans-serif';
+    ctx.font = 'bold 52px system-ui, sans-serif';
     ctx.fillStyle = '#ffffff';
-    this._text(ctx, 'SWARMFALL', VIEW_WIDTH / 2, 28);
+    this._text(ctx, 'SWARMFALL', VIEW_WIDTH / 2, 22);
 
-    ctx.font = '24px system-ui, sans-serif';
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
-    this._text(ctx, 'Prototype — move with WASD or the Arrow Keys', VIEW_WIDTH / 2, 96);
+    // Survival timer, prominent under the title.
+    ctx.font = 'bold 40px ui-monospace, monospace';
+    ctx.fillStyle = '#ffe066';
+    this._text(ctx, this._formatTime(game.elapsed), VIEW_WIDTH / 2, 84);
 
-    // Debug readouts, top-left.
+    // Kill counter, top-right.
+    ctx.textAlign = 'right';
+    ctx.font = 'bold 34px system-ui, sans-serif';
+    ctx.fillStyle = '#ff8fab';
+    this._text(ctx, `Kills: ${game.kills}`, VIEW_WIDTH - 28, 28);
+
+    // Debug block, top-left.
     ctx.textAlign = 'left';
-    ctx.font = '28px ui-monospace, monospace';
+    ctx.font = '24px ui-monospace, monospace';
     ctx.fillStyle = '#8be9fd';
-    const px = Math.round(game.player.x);
-    const py = Math.round(game.player.y);
     this._text(ctx, `FPS: ${Math.round(game.fps)}`, 28, 28);
-    this._text(ctx, `Player: (${px}, ${py})`, 28, 64);
+    this._text(ctx, `HP: ${game.player.hp}/${game.player.maxHp}`, 28, 58);
+    this._text(ctx, `Enemies: ${game.spawner.enemies.length}`, 28, 88);
+    this._text(
+      ctx,
+      `Player: (${Math.round(game.player.x)}, ${Math.round(game.player.y)})`,
+      28,
+      118
+    );
 
     ctx.restore();
+  }
+
+  // Seconds -> mm:ss.
+  _formatTime(seconds) {
+    const total = Math.floor(seconds);
+    const m = Math.floor(total / 60);
+    const s = total % 60;
+    return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
   }
 
   // Draw text with a subtle drop shadow so it stays readable over any color.

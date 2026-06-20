@@ -15,6 +15,20 @@ export function distance(ax, ay, bx, by) {
   return Math.hypot(bx - ax, by - ay);
 }
 
+// Squared distance — cheaper than distance() when you only need to compare
+// lengths (e.g. finding the nearest enemy or testing an overlap).
+export function distanceSq(ax, ay, bx, by) {
+  const dx = bx - ax;
+  const dy = by - ay;
+  return dx * dx + dy * dy;
+}
+
+// True if two circles overlap. Used for all collision in the game.
+export function circleOverlap(ax, ay, ar, bx, by, br) {
+  const r = ar + br;
+  return distanceSq(ax, ay, bx, by) <= r * r;
+}
+
 // Length of a vector.
 export function length(x, y) {
   return Math.hypot(x, y);
