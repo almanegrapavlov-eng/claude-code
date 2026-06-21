@@ -1,0 +1,26 @@
+id,role,type,description,size_ratio,style_ref,source
+# NOTE: workspace has 0 generation credits (free plan) -> all assets produced procedurally,
+# each still bound byte-for-byte to STYLE FORMULA v1. Swap to AI gen later if credits added.
+ground,tiling map ground drawn under everything,procedural tile,cracked grey asphalt with dead-grass patches and seams,code,STYLE FORMULA v1,procedural
+survivor,player body sprite rotated to aim angle and tinted per player,procedural sprite,top-down survivor torso with arms holding a gun,code,STYLE FORMULA v1,procedural
+zombie,enemy zombie sprite rotated toward target,procedural sprite,top-down shambling zombie arms forward,code,STYLE FORMULA v1,procedural
+crate,destructible loot crate and cover obstacle,procedural sprite,wooden supply crate seen from above,code,STYLE FORMULA v1,procedural
+tree,cover obstacle blocking movement and bullets,procedural sprite,dead leafless tree canopy from above,code,STYLE FORMULA v1,procedural
+rock,cover obstacle blocking movement and bullets,procedural sprite,grey mossy boulder from above,code,STYLE FORMULA v1,procedural
+wall,building walls forming rooms for cover,procedural sprite,dark concrete wall blocks with crisp outline,code,STYLE FORMULA v1,procedural
+weapons,weapon glyphs for HUD and ground loot,procedural sprite,pistol smg shotgun rifle top-down glyphs,code,STYLE FORMULA v1,procedural
+medkit,health pickup on ground and HUD,procedural sprite,red and white medical health pack,code,STYLE FORMULA v1,procedural
+armor,armor pickup on ground and HUD,procedural sprite,dark tactical armor vest,code,STYLE FORMULA v1,procedural
+ammo,ammo pickup on ground,procedural sprite,signal-yellow ammo box,code,STYLE FORMULA v1,procedural
+bullet,projectile tracer and impact spark,procedural,signal-yellow tracer streak,code,STYLE FORMULA v1,procedural
+muzzle_flash,shooting feedback at gun muzzle,procedural,short signal-yellow muzzle burst,code,STYLE FORMULA v1,procedural
+blood,hit and death feedback particles,procedural,dark red blood splatter particles,code,STYLE FORMULA v1,procedural
+safezone,shrinking safe-zone ring and red danger overlay,procedural,white safe ring with translucent red danger fill,code,STYLE FORMULA v1,procedural
+hud,health armor ammo bars minimap leaderboard kill-feed,procedural,flat dark HUD panels with signal-yellow accents,code,STYLE FORMULA v1,procedural
+sfx_shot,gunshot on fire,procedural audio,noise burst lowpass punch via WebAudio,code,STYLE FORMULA v1,procedural
+sfx_zombie,zombie aggro groan,procedural audio,detuned saw growl with LFO via WebAudio,code,STYLE FORMULA v1,procedural
+sfx_pickup,item pickup blip,procedural audio,bright two-note blip via WebAudio,code,STYLE FORMULA v1,procedural
+sfx_hit,player hurt thud,procedural audio,low thud via WebAudio,code,STYLE FORMULA v1,procedural
+music_ambient,tense looping background drone,procedural audio,dark apocalyptic drone pad via WebAudio,code,STYLE FORMULA v1,procedural
+thumbnail,deploy and marketplace 16:9 cover card,image,zombie battle royale key art with title,1280x720 16:9,STYLE FORMULA v1,procedural-PIL
+favicon,deploy 1:1 square icon,image,zombie survivor head icon,512x512 1:1,STYLE FORMULA v1,procedural-PIL

@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Zombie Zone .io</title>
+<style>
+  :root { --yellow:#ffd23f; --ink:#0e110b; --panel:rgba(18,21,14,0.92); --line:#3a4030; --text:#e9ead8; --dim:#9aa488; }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html,body { margin:0; height:100%; overflow:hidden; background:#0e110b; color:var(--text);
+    font-family: system-ui,-apple-system,Segoe UI,Roboto,sans-serif; touch-action:none; user-select:none; }
+  canvas { display:block; position:fixed; inset:0; }
+  .overlay { position:fixed; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; padding:24px; z-index:10;
+    background:
+      radial-gradient(120% 90% at 50% 0%, rgba(120,20,15,0.20), transparent 55%),
+      radial-gradient(120% 120% at 50% 120%, rgba(0,0,0,0.65), rgba(8,10,7,0.96)); }
+  #title { font-size: clamp(40px, 11vw, 96px); font-weight:900; letter-spacing:2px; margin:0; line-height:0.95;
+    color:var(--yellow); text-shadow: 0 4px 0 #7a5a10, 0 0 30px rgba(255,210,63,0.25); }
+  #title .z2 { color:#8fae53; display:block; -webkit-text-stroke:0; }
+  #tagline { color:var(--dim); margin:14px 0 28px; font-size: clamp(14px,3.4vw,18px); font-weight:600; }
+  .card { background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:22px;
+    width:min(420px, 92vw); box-shadow:0 20px 60px rgba(0,0,0,0.5); }
+  input#name { width:100%; padding:14px 16px; font-size:17px; border-radius:10px; border:1px solid var(--line);
+    background:#171b12; color:var(--text); outline:none; text-align:center; font-weight:700; }
+  input#name:focus { border-color:var(--yellow); }
+  button { cursor:pointer; font-family:inherit; }
+  .btn { margin-top:14px; width:100%; padding:15px; font-size:20px; font-weight:900; letter-spacing:1px;
+    border:none; border-radius:10px; color:#1a1405; background:linear-gradient(180deg,#ffe071,#f2b418);
+    box-shadow:0 5px 0 #9c7410, 0 8px 22px rgba(242,180,24,0.35); transition:transform .05s, box-shadow .05s; }
+  .btn:active { transform:translateY(4px); box-shadow:0 1px 0 #9c7410; }
+  .btn:disabled { filter:grayscale(0.7) brightness(0.8); cursor:default; }
+  .how { margin-top:20px; color:var(--dim); font-size:13px; line-height:1.6; }
+  .how b { color:var(--text); display:block; margin-bottom:6px; letter-spacing:1px; font-size:12px; }
+  #tip { margin-top:14px; color:#c7b56a; font-size:12.5px; font-style:italic; max-width:380px; }
+  #death .card { border-color:#5a201a; }
+  #deathTitle { font-size: clamp(34px,9vw,64px); font-weight:900; color:#e0584a; margin:0 0 6px;
+    text-shadow:0 0 24px rgba(224,88,74,0.4); }
+  #deathSub { color:var(--dim); margin-bottom:8px; font-weight:600; }
+  #conn { background:rgba(8,10,7,0.82); }
+  #conn .spinner { width:42px; height:42px; border:4px solid var(--line); border-top-color:var(--yellow);
+    border-radius:50%; animation:spin 0.9s linear infinite; margin-bottom:16px; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+  #conn span { color:var(--dim); font-weight:600; }
+  #mute { position:fixed; top:10px; right:12px; z-index:20; background:rgba(18,21,14,0.7);
+    border:1px solid var(--line); color:var(--text); border-radius:8px; width:38px; height:34px; font-size:16px; }
+  #dev { position:fixed; top:4px; left:6px; z-index:20; color:#7fe07f; font:12px monospace; display:none; }
+  .foot { position:fixed; bottom:8px; left:0; right:0; text-align:center; color:#5c624e; font-size:11px; z-index:9; }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<button id="mute">🔊</button>
+<div id="dev"></div>
+
+<div id="menu" class="overlay">
+  <h1 id="title">ZOMBIE <span class="z2">ZONE .io</span></h1>
+  <p id="tagline">Scavenge. Survive. Outlast the horde.</p>
+  <div class="card">
+    <input id="name" maxlength="16" autocomplete="off" spellcheck="false" placeholder="Enter callsign">
+    <button id="play" class="btn">DROP IN</button>
+    <div class="how">
+      <b id="howToTitle">HOW TO SURVIVE</b>
+      <div id="controls"></div>
+    </div>
+    <div id="tip"></div>
+  </div>
+  <div class="foot">Share the link to play with friends · bots fill empty slots</div>
+</div>
+
+<div id="death" class="overlay" style="display:none">
+  <div class="card">
+    <h2 id="deathTitle">YOU DIED</h2>
+    <p id="deathSub"></p>
+    <button id="redeploy" class="btn">REDEPLOY</button>
+  </div>
+</div>
+
+<div id="conn" class="overlay" style="display:none">
+  <div class="spinner"></div>
+  <span>Establishing uplink…</span>
+</div>
+
+<script type="module" src="./game.js"></script>
+</body>
+</html>
